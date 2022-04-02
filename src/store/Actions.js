@@ -1,8 +1,9 @@
 
 //actions
 export const SET_CART = 'set_cart'
-export const SET_COUNT = 'set_count'
-export const SET_TOTAL_PRICE = 'set_total_price'
+// export const SET_TOTALPRODUCT = 'set_totalproduct'
+
+// export const SET_TOTAL_PRICE = 'set_total_price'
 export const SET_INCREASE = 'set_increase'
 export const SET_ISSIGNEDIN  = 'set_isSignedIn'
 export const SET_USER = 'set_User'
@@ -18,19 +19,20 @@ export const SetCart = payload =>{
 }
 
 
-export const SetCount = payload =>{
-    return {
-        type: SET_CART,
-        payload
-    }
-}
+// export const SetTotalProduct = payload =>{
+//     return {
+//         type: SET_TOTALPRODUCT,
+//         payload
+//     }
+// }
 
-export const SetIncrease = payload =>{
-    return {
-        type: SET_INCREASE,
-        payload
-    }
-}
+// export const SetTotalPrice = payload =>{
+//     return {
+//         type: SET_TOTAL_PRICE,
+//         payload
+//     }
+// }
+
 
 
 export const SetIsSignedIn = payload =>{

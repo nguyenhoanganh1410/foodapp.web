@@ -8,14 +8,14 @@ import LoginPage from './pages/LoginPage';
 import CategoriesPage from './pages/CategoriesPage';
 import CheckOutPage from './pages/CheckOutPage'
 import {fillter_food} from './data/data'
-
+import cartApi from "./api/cartApi";
 
 import {Routes, Route, useParams} from 'react-router-dom'
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { useContext, useEffect, useState } from 'react';
-import { SetIsSignedIn, SetUser, SET_ISSIGNEDIN } from './store/Actions';
+import { SetCart, SetIsSignedIn, SetUser, SET_ISSIGNEDIN } from './store/Actions';
 import Contex from './store/Context';
 import user_icon from './imgage/userIcon.jpg'
 import productApi from './api/productApi';
@@ -33,9 +33,9 @@ function App() {
   const {state, depatch} = useContext(Contex)
   
   //detructering...
-  const {isSignedIn, user} = state
-  console.log(isSignedIn);
-   console.log(user);
+  const {isSignedIn, user, cart, totalProduct, totalPrice} = state
+  console.log(cart);
+ 
   // Listen to the Firebase Auth state and set the local state.
   useEffect(() => {
   
@@ -60,6 +60,19 @@ function App() {
         header_userName.innerHTML = u.displayName
          document.querySelector('.img_account').src = u.photoURL
        // console.log("login : ", user);
+
+        //  //fetch product in cart
+        // const fetchCartList = async () => {
+        //   try {
+        //     const response = await cartApi.getById("cart", u.email);
+        //     console.log(u.email);
+        //     depatch(SetCart(response[0].items));
+        //     console.log(response);
+        //   } catch (error) {
+        //     console.log("Failed to fetch product list: ", error);
+        //   }
+        // };
+        // fetchCartList();
       }
 
     });
