@@ -19,11 +19,17 @@ import BtnScroll from "./BtnScroll";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { Routes, Route, Link, Outlet, NavLink } from "react-router-dom";
-import { SetCart, SetDialogShow, SetOpenBar, SetUser } from "../store/Actions";
+import {
+  SetCart,
+  SetDialogShow,
+  SetFirstAdd,
+  SetOpenBar,
+  SetUser,
+} from "../store/Actions";
 const Header = () => {
   const { state, depatch } = useContext(Contex);
   //detructering...
-  const { totalProduct, totalPrice, cart, user, isSignedIn, openBar } = state;
+  const { totalProduct, totalPrice, cart, user, isSignedIn, openBar,firstAdd } = state;
 
   useEffect(() => {
     const handScroll = () => {
@@ -52,22 +58,6 @@ const Header = () => {
       if (!user.photoURL) {
         document.querySelector(".img_account").src = user.photoURL;
       }
-
-      //fetch product in cart
-      const fetchCartList = async () => {
-        try {
-          const response = await cartApi.getById("cart", { id: user.email });
-          console.log(response);
-          console.log(user.email);
-          if (response.length !== 0) {
-            console.log("set cart");
-            depatch(SetCart(response[0].items));
-          }
-        } catch (error) {
-          console.log("Failed to fetch product list: ", error);
-        }
-      };
-      fetchCartList();
     }
 
     //cleanup function
@@ -75,6 +65,29 @@ const Header = () => {
       window.removeEventListener("scroll", handScroll);
     };
   }, [user]);
+
+  useEffect(()=>{
+          //fetch product in cart
+          const fetchCartList = async () => {
+            try {
+              const response = await cartApi.getById("cart", { id: user.email });
+              console.log(response);
+              console.log(user.email);
+              if (response.length !== 0) {
+                console.log("set cart");
+                depatch(SetCart(response[0].items));
+    
+                 //lan dau them vao gio hang
+               
+                 depatch(SetFirstAdd(false));
+    
+              } 
+            } catch (error) {
+              console.log("Failed to fetch product list: ", error);
+            }
+          };
+          fetchCartList();
+  }, [user, firstAdd])
 
   const handleOpenCart = () => {
     //nếu đã đăng nhập tài khoản thì active cart

@@ -16,7 +16,7 @@ import Contex from "../../store/Context";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CardProduct from "../card/CardProduct";
-import { SetDialogShow } from "../../store/Actions";
+
 import productApi from "../../api/productApi";
 
 import item1 from "../../imgage/item1.jpg";
@@ -31,7 +31,8 @@ import {
   useSearchParams,
   useNavigate,
 } from "react-router-dom";
-
+import { SetCart, SetDialogShow, SetFirstAdd } from "../../store/Actions";
+import cartApi from '../../api/cartApi';
 
 const ProductDetail = () => {
   const params = useParams();
@@ -40,7 +41,7 @@ const ProductDetail = () => {
   //get url global value
   const { state, depatch } = useContext(Contex);
   //detructering...
-  const { url, isSignedIn, user } = state;
+  const { url, isSignedIn, user, cart, firstAdd } = state;
 
   const [itemList, setItemList] = useState([]);
 
@@ -157,6 +158,73 @@ const ProductDetail = () => {
     console.log(value);
     setStar(value)
  }
+
+ const handleAddToCart = () =>{
+ //kiem tra dang nhap chua
+ if(isSignedIn){
+  //lan dau them sanpham vao gio hang
+    if (firstAdd && isSignedIn) {
+      //add product in cart
+      const addIntoCart = async () => {
+        try {
+          const response = await cartApi.addProductIntoCart(
+            "cart",
+            user.email,
+            product[0]
+          );
+          notify();
+
+          //khong con la lan dau nua
+          depatch(SetFirstAdd(false));
+        } catch (error) {
+          console.log("Failed to fetch product list: ", error);
+        }
+      };
+      addIntoCart();
+    } else {
+      const newCart = checkCart(cart,product[0]);
+      depatch(SetCart(newCart));
+
+      const addIntoCart = async () => {
+        try {
+          const response = await cartApi.updateProductInCart(
+            "cart",
+            user.email,
+            newCart
+          );
+          notify();
+        } catch (error) {
+          console.log("Failed to fetch product list: ", error);
+        }
+      };
+      addIntoCart();
+    }
+  }
+  else{
+     //thông báo phải login mới thực hiện được chức năng( dialogshow)
+     depatch(SetDialogShow(true));
+  }
+ }
+ //kiem tra sp da co trong cart chua
+ const checkCart = (cartFood, food) => {
+  
+  let check = false;
+  //kiem tra san pham muon them da co trong cart chua?
+  const newCart = cartFood.map((val) => {
+    if (val.id === food.id) {
+      val.quatity = val.quatity + number;
+      check = true;
+    }
+    return val;
+  });
+  const CartNew = [...cartFood, { ...food, quatity: 1 }];
+ 
+  if (check) {
+    return newCart;
+  }
+  return CartNew;
+};
+
   return (
     <div className="detail_product">
       {
@@ -258,7 +326,9 @@ const ProductDetail = () => {
                     </span>
                   </div>
                   <div className="detail_content__add">
-                    <button className="btn btn_order">
+                    <button className="btn btn_order"
+                      onClick={() => handleAddToCart() }
+                      >
                       <span>
                         <BsCartPlus />
                       </span>

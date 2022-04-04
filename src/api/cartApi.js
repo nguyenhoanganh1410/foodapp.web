@@ -8,21 +8,24 @@ const cartApi  = {
   },
 
   
-  updateProductInCart : (url,params, product, totalProductInCart) => {
+  addProductIntoCart : (url, params, item) => {
     const URL = `/${url}`;
-    return axiosClientNew.put(`${URL}/${params}`, {
+    return axiosClientNew.post(URL, {
+      id:params,
       items: [
         {
-          "id": product.id,
-          "img": product.img,
-          "name": product.name,
-          "dsc": product.dsc,
-          "price": product.price,
-          "rate": product.rate,
-          "country": product.country,
-          "quatity": totalProductInCart
+          ...item,
+          "quatity": 1
         }
       ]
+    });
+  },
+  
+  updateProductInCart : (url,params, items) => {
+    const URL = `/${url}`;
+    console.log(items);
+    return axiosClientNew.put(`${URL}/${params}`, {
+      items
     })
   }
  

@@ -10,6 +10,7 @@ import {
   SET_TOTAL_PRICE,
   SET_URL,
   SET_USER,
+  SET_FIRSTADD
 } from "./Actions";
 
 //innite state
@@ -24,6 +25,8 @@ const initState = {
   //url param call API
   url: "best-foods",
   openBar: false,
+  //lan dau them vao gio hang
+  firstAdd : true
 };
 
 //depatch
@@ -65,6 +68,11 @@ const Reducer = (state, action) => {
         ...state,
         openBar: action.payload,
       };
+      case SET_FIRSTADD:
+        return {
+          ...state,
+          firstAdd: action.payload,
+        };
   }
 };
 

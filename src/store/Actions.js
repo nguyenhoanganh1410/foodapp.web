@@ -10,6 +10,8 @@ export const SET_USER = 'set_User'
 export const SET_SHOWDIALOG = 'set_Dialog'
 export const SET_URL = 'set_URL'
 export const SET_OPENBAR =  'set_OpenBar'
+export const SET_FIRSTADD =  'set_FirstAdd'
+
 
 export const SetCart = payload =>{
     return {
@@ -17,7 +19,12 @@ export const SetCart = payload =>{
         payload
     }
 }
-
+export const SetFirstAdd = payload =>{
+    return {
+        type: SET_FIRSTADD,
+        payload
+    }
+}
 
 // export const SetTotalProduct = payload =>{
 //     return {

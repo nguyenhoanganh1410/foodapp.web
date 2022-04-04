@@ -9,6 +9,7 @@ import { RiDeleteBin7Line } from "react-icons/ri";
 import iteam from "../imgage/item1.jpg"; // gives image path
 import { useParams, useNavigate } from "react-router-dom";
 import cartApi from "../api/cartApi";
+import { SetCart } from "../store/Actions";
 const CartDetails = () => {
   const [showDetails, setShowDetails] = useState(false);
   const navigate = useNavigate();
@@ -38,37 +39,75 @@ const CartDetails = () => {
     navigate("/checkout");
   };
 
+  const handleBuyMore = () => {
+    navigate("/category/best-foods");
+  };
+
   //xu ly giam so luong san pham
   const handleMinus = (item) => {
-    // const num = +document.querySelector(".item_count").innerHTML;
-    // if(num > 1){
-    //   const newQuatity = num -1 ;
-    //   document.querySelector(".item_count").innerHTML = newQuatity
-    //   updateQuatityProduct(item, newQuatity);
-    // }
+    if (item.quatity > 1) {
+      //set number the item in cart
+      let newCart = cart.map((val) => {
+        if (item.id === val.id) {
+          val.quatity = item.quatity - 1;
+        }
+        return val;
+      });
+      //set lai cart
+      depatch(SetCart(newCart));
+
+      updateQuatityProduct(newCart);
+    }
   };
   //xu ly tang so luong san pham
   const handlePluss = (item) => {
-    // const num = +document.querySelector(".item_count").innerHTML;
-   
-    //   const newQuatity = num+1 ;
-    //   document.querySelector(".item_count").innerHTML = newQuatity
-    //   updateQuatityProduct(item, newQuatity);
-    
+    //set number the item in cart
+    let newCart = cart.map((val) => {
+      if (item.id === val.id) {
+        val.quatity = item.quatity + 1;
+      }
+      return val;
+    });
+    //set lai cart
+    depatch(SetCart(newCart));
+
+    updateQuatityProduct(newCart);
   };
 
   //update product in cart
-  const updateQuatityProduct = async (product, totalProductInCart) => {
+  const updateQuatityProduct = async (newCart) => {
     try {
       const response = await cartApi.updateProductInCart(
         "cart",
         user.email,
-        product,
-        totalProductInCart
+        newCart
       );
     } catch (error) {
       console.log("Failed to fetch product list: ", error);
     }
+  };
+
+  const handleDeleteItem = (item) => {
+    //xoa san pham khoi cart
+    const newCart = cart.filter((val) => {
+      return val.id !== item.id;
+    });
+    //cap nhat lai cart( da xoa item)
+    depatch(SetCart(newCart));
+
+    //cap nhat tai server
+    const deleteCart = async () => {
+      try {
+        const response = await cartApi.updateProductInCart(
+          "cart",
+          user.email,
+          newCart
+        );
+      } catch (error) {
+        console.log("Failed to fetch product list: ", error);
+      }
+    };
+    deleteCart();
   };
 
   return (
@@ -112,7 +151,10 @@ const CartDetails = () => {
                         </span>
                       </div>
                     </div>
-                    <span className="item_delete">
+                    <span
+                      className="item_delete"
+                      onClick={() => handleDeleteItem(val)}
+                    >
                       <RiDeleteBin7Line />
                     </span>
                   </div>
@@ -179,7 +221,7 @@ const CartDetails = () => {
               </span>
               checkout
             </button>
-            <button className="btn btn_order">
+            <button className="btn btn_order" onClick={() => handleBuyMore()}>
               <span>
                 <HiOutlineShoppingCart />
               </span>
