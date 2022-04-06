@@ -24,12 +24,13 @@ import {
   SetDialogShow,
   SetFirstAdd,
   SetOpenBar,
+  SetOpenWishList,
   SetUser,
 } from "../store/Actions";
 const Header = () => {
   const { state, depatch } = useContext(Contex);
   //detructering...
-  const { totalProduct, totalPrice, cart, user, isSignedIn, openBar,firstAdd } = state;
+  const { totalProduct, openWishList,totalPrice, cart, user, isSignedIn, openBar,firstAdd } = state;
 
   useEffect(() => {
     const handScroll = () => {
@@ -71,14 +72,11 @@ const Header = () => {
           const fetchCartList = async () => {
             try {
               const response = await cartApi.getById("cart", { id: user.email });
-              console.log(response);
-              console.log(user.email);
+
               if (response.length !== 0) {
-                console.log("set cart");
+              
                 depatch(SetCart(response[0].items));
-    
-                 //lan dau them vao gio hang
-               
+                 //lan dau them vao gio hang             
                  depatch(SetFirstAdd(false));
     
               } 
@@ -121,6 +119,10 @@ const Header = () => {
   const handleOpenBar = () => {
     depatch(SetOpenBar(true));
   };
+
+  const handleOpenWishList = () =>{
+    depatch(SetOpenWishList(true));
+  }
   return (
     <header className="header">
       <div className="container">
@@ -195,7 +197,7 @@ const Header = () => {
                     </span>
                     <a>my account</a>
                   </li>
-                  <li>
+                  <li onClick={() => handleOpenWishList()}>
                     <span>
                       <FaVoteYea />
                     </span>

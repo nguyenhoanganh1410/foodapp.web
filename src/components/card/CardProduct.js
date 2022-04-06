@@ -8,7 +8,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import Contex from "../../store/Context";
 import cartApi from "../../api/cartApi";
-import { SetCart, SetDialogShow, SetFirstAdd } from "../../store/Actions";
+import { SetCart, SetDialogShow, SetFirstAdd, SetFirstAddWish, SetWishList } from "../../store/Actions";
 
 const CardProduct = ({ dislayItems, item, notify, notifyFavotites }) => {
   const params = useParams();
@@ -17,7 +17,7 @@ const CardProduct = ({ dislayItems, item, notify, notifyFavotites }) => {
   //get url global value
   const { state, depatch } = useContext(Contex);
   //detructering...
-  const { url, firstAdd, isSignedIn, user, cart } = state;
+  const { url, firstAdd, isSignedIn, user, cart,firstAddWish,wishList } = state;
 
   //chuyen huong khi click vao tung san pham
   const hanldClickItem = (id) => {
@@ -71,9 +71,56 @@ const CardProduct = ({ dislayItems, item, notify, notifyFavotites }) => {
     }
   };
 
+
+  //xu ly add to wishList
+  const handleAddWishList = () =>{
+     //kiem tra dang nhap chua
+     if(isSignedIn){
+      if (firstAddWish) {
+        //add product in cart
+        const addIntoWishList = async () => {
+          try {
+            const response = await cartApi.addProductIntoWishList(
+              "wishlist",
+              user.email,
+              item
+            );
+            //khong con la lan dau nua
+            depatch(SetFirstAddWish(false));
+          } catch (error) {
+            console.log("Failed to fetch product list: ", error);
+          }
+        };
+        addIntoWishList();
+      } else {
+        const newWishList = checkWishList(wishList,item);
+      
+        depatch(SetWishList(newWishList));
+
+        const addIntoWishList = async () => {
+          try {
+            const response = await cartApi.updateProductInCart(
+              "wishlist",
+              user.email,
+              newWishList
+            );
+           
+          } catch (error) {
+            console.log("Failed to fetch product list: ", error);
+          }
+        };
+       addIntoWishList();
+      }
+      notifyFavotites();
+     } else{
+       //thông báo phải login mới thực hiện được chức năng( dialogshow)
+       depatch(SetDialogShow(true));
+    }
+  }
+
   //kiem tra sp da co trong cart chua
   const checkCart = (cartFood, food) => {
-    console.log("add cart");
+   
     let check = false;
     //kiem tra san pham muon them da co trong cart chua?
     const newCart = cartFood.map((val) => {
@@ -84,13 +131,27 @@ const CardProduct = ({ dislayItems, item, notify, notifyFavotites }) => {
       return val;
     });
     const CartNew = [...cartFood, { ...food, quatity: 1 }];
-    console.log("a" == "b");
     if (check) {
       return newCart;
     }
     return CartNew;
   };
 
+  //kiem tra item trong wishlist ton tai chua
+  const checkWishList = (WishList,food) =>{
+    //them san pham moi vao array
+    const CartNew = [...WishList, food];
+   
+    //loc san pham khong trung nhau
+    const arrayWishList = CartNew.filter( (val, idx) =>{
+      return idx === CartNew.findIndex(v => val.id === v.id);
+    })
+
+    return arrayWishList;
+  }
+
+
+  
   return (
     <div
       key={item.id}
@@ -129,7 +190,7 @@ const CardProduct = ({ dislayItems, item, notify, notifyFavotites }) => {
         </div>
       </div>
       <div className="shop-product__btns">
-        <div className="shop-product__btn" onClick={notifyFavotites}>
+        <div className="shop-product__btn" onClick={() => handleAddWishList()}>
           <BsHeart />
         </div>
         <div className="shop-product__btn" onClick={() => handleAddCart()}>

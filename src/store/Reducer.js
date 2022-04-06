@@ -10,7 +10,10 @@ import {
   SET_TOTAL_PRICE,
   SET_URL,
   SET_USER,
-  SET_FIRSTADD
+  SET_FIRSTADD,
+  SET_WISHLIST,
+  SET_FIRSTADDWiSH,
+  SET_OPENWISHLIST
 } from "./Actions";
 
 //innite state
@@ -19,12 +22,15 @@ const initState = {
   totalProduct: 0,
   totalPrice: 0,
   cart: [],
+  wishList: [],
+  firstAddWish : true,
   user: null,
   isSignedIn: false,
   showDialog: false,
   //url param call API
   url: "best-foods",
   openBar: false,
+  openWishList: false,
   //lan dau them vao gio hang
   firstAdd : true
 };
@@ -73,6 +79,21 @@ const Reducer = (state, action) => {
           ...state,
           firstAdd: action.payload,
         };
+        case SET_FIRSTADDWiSH:
+          return {
+            ...state,
+            firstAddWish: action.payload,
+          };
+        case SET_WISHLIST:
+          return {
+            ...state,
+            wishList: action.payload,
+          };
+          case SET_OPENWISHLIST:
+            return {
+              ...state,
+              openWishList: action.payload,
+            };
   }
 };
 

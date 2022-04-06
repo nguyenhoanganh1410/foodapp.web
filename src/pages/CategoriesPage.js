@@ -7,6 +7,7 @@ import DialogShow from "../components/dialog/DialogShow"
 import CartDetails from "../components/CartDetails"
 import BtnScroll from "../components/BtnScroll"
 import TabBar from "../components/tabbar/TabBar"
+import WishList from "../components/wishlist/WishList"
 const CategoriesPage = () =>{
     return (
         <React.Fragment>
@@ -17,6 +18,7 @@ const CategoriesPage = () =>{
             <BtnScroll />
             <DialogShow />
             <TabBar />
+            <WishList />
         </React.Fragment>
     )
 }

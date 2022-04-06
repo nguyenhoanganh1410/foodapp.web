@@ -11,6 +11,7 @@ import HomeReview from "../components/HomeReview"
 import FooterApp from "../components/FooterApp"
 import DialogShow from "../components/dialog/DialogShow"
 import TabBar from "../components/tabbar/TabBar"
+import WishList from "../components/wishlist/WishList"
 
 const HomePage = () =>{
     return (
@@ -26,6 +27,7 @@ const HomePage = () =>{
             <HomeReview />
             <FooterApp />
             <TabBar />
+            <WishList />
            <DialogShow />
         </React.Fragment>
 

@@ -13,6 +13,7 @@ import DialogShow from "../components/dialog/DialogShow"
 import BannerPaths from "../components/category/BannerPaths"
 import ProductDetail from "../components/detail/ProductDetail"
 import TabBar from "../components/tabbar/TabBar"
+import WishList from "../components/wishlist/WishList"
 
 const DetailProductPage = () =>{
     return (
@@ -24,6 +25,7 @@ const DetailProductPage = () =>{
            
             <BtnScroll />
             <FooterApp />
+            <WishList />
             <TabBar />
         <DialogShow />
     </React.Fragment>

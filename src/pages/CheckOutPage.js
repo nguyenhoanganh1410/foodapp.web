@@ -14,6 +14,7 @@ import BannerPaths from "../components/category/BannerPaths"
 import ProductDetail from "../components/detail/ProductDetail"
 import CheckOut from "../components/checkout/CheckOut"
 import TabBar from "../components/tabbar/TabBar"
+import WishList from "../components/wishlist/WishList"
 const CheckOutPage = () =>{
     return (
         <React.Fragment>
@@ -23,6 +24,7 @@ const CheckOutPage = () =>{
             <CartDetails />
             <CheckOut />
             <BtnScroll />
+            <WishList />
             <FooterApp />
         <DialogShow />
         <TabBar />

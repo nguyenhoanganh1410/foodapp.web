@@ -20,10 +20,22 @@ const cartApi  = {
       ]
     });
   },
+  addProductIntoWishList : (url, params, item) => {
+    const URL = `/${url}`;
+    return axiosClientNew.post(URL, {
+      id:params,
+      items: [
+        {
+          ...item
+        
+        }
+      ]
+    });
+  },
   
   updateProductInCart : (url,params, items) => {
     const URL = `/${url}`;
-    console.log(items);
+   
     return axiosClientNew.put(`${URL}/${params}`, {
       items
     })
